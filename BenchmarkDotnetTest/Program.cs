@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 
 namespace BenchmarkDotnetTest
@@ -18,6 +19,8 @@ namespace BenchmarkDotnetTest
     /// 測試用擂台
     /// </summary>
     [MemoryDiagnoser]
+    [SimpleJob(RuntimeMoniker.Net472)]
+    [SimpleJob(RuntimeMoniker.NetCoreApp30)]
     public class EmptyVSNewList
     {
         // 紅方選手
