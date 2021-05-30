@@ -17,11 +17,15 @@ namespace BenchmarkDotnetTest
     /// <summary>
     /// 測試用擂台
     /// </summary>
+    [MemoryDiagnoser]
     public class EmptyVSNewList
     {
         // 紅方選手
         [Benchmark]
-        public void Empty() => Enumerable.Empty<Foo>();
+        public void Empty()
+        {
+            Enumerable.Empty<Foo>();
+        }
 
         // 藍方選手
         [Benchmark]
