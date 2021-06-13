@@ -11,31 +11,29 @@ namespace BenchmarkDotnetTest
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<EmptyVSNewList>();
+            var summary = BenchmarkRunner.Run<ParamsTest>();
         }
     }
+
+    #region -- Empty Vs NewList --
 
     /// <summary>
     /// 測試用擂台
     /// </summary>
+    [HtmlExporter]
+    [AsciiDocExporter]
+    [CsvExporter]
+    [CsvMeasurementsExporter]
+    [PlainExporter]
+    [RPlotExporter]
+
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.Net472)]
     [SimpleJob(RuntimeMoniker.NetCoreApp30)]
     public class EmptyVSNewList
     {
-        // 紅方選手
-        [Benchmark]
-        public void Empty()
-        {
-            Enumerable.Empty<Foo>();
-        }
-
-        // 藍方選手
-        [Benchmark]
-        public void NewList()
-        {
-            new List<Foo>();
-        }
+        [Benchmark] public void Empty() => Enumerable.Empty<Foo>();
+        [Benchmark] public void NewList() => new List<Foo>();
     }
 
     /// <summary>
@@ -44,10 +42,26 @@ namespace BenchmarkDotnetTest
     public class Foo
     {
         public Guid Id { get; set; }
-        public string Bar1 { get; set; }
-        public string Bar2 { get; set; }
-        public string Bar3 { get; set; }
-        public string Bar4 { get; set; }
-        public string Bar5 { get; set; }
+        public string Bar { get; set; }
     }
+
+    #endregion
+
+    #region -- Params --
+
+    public class ParamsTest
+    {
+        public IEnumerable<int> SourceA => new [] { 10, 10000 };
+        public IEnumerable<int> SourceB => new[] { 2, 20000 };
+
+        [ParamsSource(nameof(SourceA))]
+        public int A { get; set; }
+
+        [ParamsSource(nameof(SourceB))]
+        public int B { get; set; }
+
+        [Benchmark] public int Cul() => A * B;
+    }
+
+    #endregion
 }
